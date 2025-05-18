@@ -1,21 +1,37 @@
 import unittest
-from securetrack import Monitor
+from securetrack import RiskAnalyzer, EmergencyAlertSystem
 
-class TestMonitor(unittest.TestCase):
-    def test_initial_settings(self):
-        monitor = Monitor()
-        self.assertEqual(monitor.safe_radius_km, 1.0)
-        self.assertEqual(monitor.voice_phrase, "Help!")
+class TestSecureTrack(unittest.TestCase):
+    def test_risk_analysis_high(self):
+        analyzer = RiskAnalyzer(location="unknown", profile="night")
+        self.assertEqual(analyzer.analyze_risk(), "High Risk")
 
-    def test_set_safe_zone(self):
-        monitor = Monitor()
-        monitor.set_safe_zone(radius_km=2.5)
-        self.assertEqual(monitor.safe_radius_km, 2.5)
+    def test_risk_analysis_low(self):
+        analyzer = RiskAnalyzer(location="home", profile="day")
+        self.assertEqual(analyzer.analyze_risk(), "Low Risk")
 
-    def test_enable_voice_trigger(self):
-        monitor = Monitor()
-        monitor.enable_voice_trigger("Emergency")
-        self.assertEqual(monitor.voice_phrase, "Emergency")
+    def test_risk_analysis_medium(self):
+        analyzer = RiskAnalyzer(location="work", profile="day")
+        self.assertEqual(analyzer.analyze_risk(), "Medium Risk")
 
-if __name__ == '__main__':
-    unittest.main()
+    def test_alert_trigger(self):
+        system = EmergencyAlertSystem(wake_words=["help", "emergency"])
+        self.assertTrue(system.detect_phrase("emergency"))
+
+    def test_alert_not_triggered(self):
+        system = EmergencyAlertSystem(wake_words=["help", "emergency"])
+        self.assertFalse(system.detect_phrase("hello"))
+
+    def test_alert_cancel_success(self):
+        system = EmergencyAlertSystem(wake_words=["help"])
+        system.detect_phrase("help")
+        self.assertTrue(system.cancel_alert("help", "help"))
+
+    def test_alert_cancel_failure(self):
+        system = EmergencyAlertSystem(wake_words=["help"])
+        system.detect_phrase("help")
+        self.assertFalse(system.cancel_alert("help", "nope"))
+
+    def test_no_alert_to_cancel(self):
+        system = EmergencyAlertSystem(wake_words=["help"])
+        self.assertFalse(system.cancel_alert("help", "help"))
