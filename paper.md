@@ -14,6 +14,7 @@ affiliations:
   - name: Independent Researcher
     index: 1
 date: 2025-05-18
+bibliography: paper.bib
 ---
 
 # Summary
