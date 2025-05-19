@@ -74,7 +74,9 @@ Citation
 
 If you use this software in your research, please cite:
 
-Shill, S.K. (2025). SecureTrack: AI-Enhanced Real-Time Risk Analysis and Emergency Alert System. Journal of Open Source Software.
+Srijon Kumar Shill. (2025). SecureTrack: AI-Enhanced Real-Time Risk Analysis and Emergency Alert System (Version 1.0.0) [Computer software]. Zenodo.
+https://doi.org/10.5281/zenodo.15464173
+
 
 License
 
